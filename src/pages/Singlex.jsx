@@ -8,12 +8,16 @@ import moment from "moment";
 import { AuthContext } from "../context/authContext";
 const Singlex = () => {
   const [post, setPost] = useState({});
+  //console.log("🚀 ~ file: Singlex.jsx:11 ~ Singlex ~ post:", post);
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(location.pathname);
+  // console.log(location.pathname);
   const postId = location.pathname.split("/")[2];
   const { currentUser } = useContext(AuthContext);
-  console.log("🚀 ~ file: Singlex.jsx:12 ~ Singlex ~ postId:", postId);
+  // console.log(
+  //   "🚀 ~ file: Singlex.jsx:17 ~ Singlex ~ currentUser:",
+  //   currentUser?.username
+  // );
 
   // fetch single post
   useEffect(() => {
@@ -44,7 +48,7 @@ const Singlex = () => {
       <div className="content">
         <img src={post?.img} alt="" />
         <div className="user">
-          {post.userImg && <img src={post.userImg} alt="" />}
+          {post?.userImg && <img src={post?.userImg} alt="" />}
           <div className="info">
             <span>{post?.username}</span>
             <p>Posted {moment(post?.date).fromNow()}</p>
@@ -61,7 +65,7 @@ const Singlex = () => {
         <h1>{post?.title}</h1>
         {post?.desc}
       </div>
-      <Menu />
+      <Menu cat={post.cat} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import Menu from "../components/Menu";
 import axios from "axios";
 import moment from "moment";
 import { AuthContext } from "../context/authContext";
+import DOMPurify from "dompurify";
 const Singlex = () => {
   const [post, setPost] = useState({});
   //console.log("🚀 ~ file: Singlex.jsx:11 ~ Singlex ~ post:", post);
@@ -43,10 +44,15 @@ const Singlex = () => {
       console.log(err);
     }
   };
+
+  const getText = (html) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent;
+  };
   return (
     <div className="single">
       <div className="content">
-        <img src={post?.img} alt="" />
+        <img src={`../upload/${post?.img}`} alt="" />
         <div className="user">
           {post?.userImg && <img src={post?.userImg} alt="" />}
           <div className="info">
@@ -55,7 +61,7 @@ const Singlex = () => {
           </div>
           {currentUser?.username === post?.username && (
             <div className="edit">
-              <Link to={`/write?edit=2`}>
+              <Link to={`/write?edit=${post.id}`} state={post}>
                 <img src={Edit} alt="" />
               </Link>
               <img onClick={handleDelete} src={Delete} alt="" />
@@ -63,7 +69,11 @@ const Singlex = () => {
           )}
         </div>
         <h1>{post?.title}</h1>
-        {post?.desc}
+        <p
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(post.desc),
+          }}
+        ></p>
       </div>
       <Menu cat={post.cat} />
     </div>
